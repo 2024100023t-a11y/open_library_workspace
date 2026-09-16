@@ -1,210 +1,160 @@
-# Open Library Cataloguer
+[Uploading README.md…]()
+# Open Library Workspace
 
-A Dart-based command-line application that retrieves and displays book information using the Open Library API.
+A small Dart [pub workspace](https://dart.dev/tools/pub/workspaces) containing a command-line book cataloguer built on top of the [Open Library](https://openlibrary.org/developers/api) API.
 
-## Project Description
+The workspace is made up of three packages:
 
-The **Open Library Cataloguer** is a command-line application developed using Dart. It connects to the Open Library API to retrieve information about books and presents the data through a simple and interactive command-line interface.
-
-The project demonstrates API integration, JSON data processing, object-oriented programming, command-line interaction, error handling, logging, terminal styling, and automated testing.
-
-## Objectives
-
-The project aims to:
-
-1. Retrieve book information from the Open Library API.
-2. Process and convert JSON responses into Dart objects.
-3. Provide a command-line interface for searching and viewing book information.
-4. Implement error handling for network and API-related problems.
-5. Use terminal colors to improve the command-line interface.
-6. Implement logging for application activities and errors.
-7. Organize the application using a Dart workspace with multiple packages.
-8. Implement automated tests for the project components.
+| Package | Type | Description |
+|---|---|---|
+| [`open_library_cli`](open_library_cli) | Application | Interactive terminal app for searching books and looking up ISBNs |
+| [`open_library_api`](open_library_api) | Library | HTTP client for the Open Library REST API |
+| [`terminal_colors`](terminal_colors) | Library | Lightweight ANSI color helpers for terminal output |
 
 ## Features
 
-- Search for books using the Open Library API.
-- Display book titles, authors, publication information, and other available details.
-- Support command-line interaction.
-- Handle API and network errors.
-- Use terminal colors for improved output.
-- Record application events and errors through logging.
-- Convert API JSON data into Dart models.
-- Include automated tests.
+- 🔍 **Search** the Open Library catalog by title or author
+- 📖 **ISBN lookup** for full book metadata (title, authors, publish date, page count)
+- 🎨 Colorized terminal output (headers, success, warnings, errors)
+- ⏱️ Built-in request timeouts and structured error handling via a single `OpenLibraryException`
 
-## Technologies Used
+## Getting Started
 
-- Dart
-- Open Library API
-- HTTP
-- JSON
-- Dart Testing Framework
-- ANSI Terminal Colors
-- Git
-- GitHub
+### Prerequisites
+
+- [Dart SDK](https://dart.dev/get-dart) `^3.8.1`
+
+### Install dependencies
+
+From the workspace root:
+
+```bash
+dart pub get
+```
+
+### Run the CLI
+
+```bash
+cd open_library_cli
+dart run bin/main.dart
+```
+
+## Usage
+
+Once running, the CLI accepts the following commands:
+
+| Command | Description | Example |
+|---|---|---|
+| `search <QUERY>` | Search books by title or author | `search dune frank herbert` |
+| `isbn <NUMBER>` | Look up a book by its ISBN | `isbn 9780441013593` |
+| `exit` | Quit the application | `exit` |
+
+### Example session
+
+```
+=====================================
+    OPEN LIBRARY CATALOGUER CLI     
+=====================================
+Commands:
+  search <QUERY>  - Search books by title or author
+  isbn <NUMBER>   - Lookup exact book by ISBN
+  exit            - Quit application
+
+[cataloguer] > search dune
+Searching Open Library for "dune"...
+
+--- SEARCH RESULTS ---
+1. Dune
+   Author(s): Frank Herbert
+   First Published: 1965
+-----------------------
+
+[cataloguer] > isbn 9780441013593
+
+--- LITERARY METADATA RECORD ---
+Title:         Dune
+Author(s):     Frank Herbert
+Publish Date:  1990
+Page Count:    535
+--------------------------------
+
+[cataloguer] > exit
+Exiting Cataloguer application...
+```
 
 ## Project Structure
 
-```text
-Open_Library_Cataloguer_Workspace/
-│
-├── terminal_colors/
-│   ├── lib/
-│   │   ├── src/
-│   │   │   ├── ansi.dart
-│   │   │   └── terminal_colors_base.dart
-│   │   ├── terminal_colors.dart
-│   │   └── ...
-│   ├── test/
+```
+open_library_workspace/
+├── pubspec.yaml                # Workspace root — lists member packages
+├── open_library_cli/           # The CLI application
+│   ├── bin/main.dart           # Entry point / REPL loop
 │   └── pubspec.yaml
-│
-├── open_library_api/
+├── open_library_api/           # Open Library HTTP client
 │   ├── lib/
-│   │   ├── src/
-│   │   │   ├── client.dart
-│   │   │   ├── exceptions.dart
-│   │   │   ├── models.dart
-│   │   │   └── open_library_api_base.dart
 │   │   ├── open_library_api.dart
-│   │   └── ...
-│   ├── test/
-│   ├── example/
+│   │   └── src/
+│   │       ├── client.dart     # OpenLibraryApiClient
+│   │       ├── models.dart     # BookSearchResult, BookMetadata
+│   │       └── exceptions.dart # OpenLibraryException
 │   └── pubspec.yaml
-│
-├── library_cli/
-│   ├── bin/
-│   │   ├── main.dart
-│   │   └── library_cli.dart
-│   ├── lib/
-│   │   ├── src/
-│   │   │   ├── search_command.dart
-│   │   │   ├── command_base.dart
-│   │   │   ├── help_command.dart
-│   │   │   ├── logging_config.dart
-│   │   │   └── book_command.dart
-│   │   └── library_cli.dart
-│   ├── test/
-│   └── pubspec.yaml
-│
-├── pubspec.yaml
-├── pubspec.lock
-└── .gitignore
+└── terminal_colors/             # ANSI color helper library
+    ├── lib/
+    │   ├── terminal_colors.dart
+    │   └── src/ansi.dart        # TerminalColor, Colorizer extension
+    └── pubspec.yaml
+```
 
-Package Description
+## Package Details
 
-terminal_colors
+### `open_library_api`
 
-The "terminal_colors" package provides reusable terminal styling and ANSI color constants for the command-line interface.
+Exposes `OpenLibraryApiClient`, a thin wrapper around two Open Library endpoints:
 
-open_library_api
+- `searchBooks(query, {limit})` → `GET /search.json` → `List<BookSearchResult>`
+- `fetchByIsbn(isbn)` → `GET /api/books` → `BookMetadata`
 
-The "open_library_api" package handles communication with the Open Library API. It also contains the book data models, API client, and exception handling.
+All network, timeout, and parsing failures are surfaced as a single `OpenLibraryException` so callers only need to handle one error type.
 
-library_cli
+```dart
+import 'package:http/http.dart' as http;
+import 'package:open_library_api/open_library_api.dart';
 
-The "library_cli" package provides the command-line interface of the application. It handles user commands, book searches, help commands, logging, and formatted output.
+final client = OpenLibraryApiClient(http.Client());
+final results = await client.searchBooks('the hobbit');
+```
 
-Requirements
+### `terminal_colors`
 
-Before running the project, make sure the following are installed:
+A tiny extension on `String` for ANSI-colored terminal output:
 
-* Dart SDK 3.8.1 or later
-* Git
-* Internet connection
+```dart
+import 'package:terminal_colors/terminal_colors.dart';
 
-Installation
+print('Success!'.styleSuccess);
+print('Warning!'.styleWarning);
+print('Error!'.styleError);
+print('== Header =='.styleHeader);
+```
 
-Clone the repository:
+### `open_library_cli`
 
-git clone https://github.com/lacsoncherryrose-byte/Open_Library_Cataloguer_Workspace.git
+The application entry point. Wires `terminal_colors` and `open_library_api` together into an interactive REPL for searching and looking up books.
 
-Navigate to the project directory:
+## Running Tests
 
-cd Open_Library_Cataloguer_Workspace
-
-Get the project dependencies:
-
-dart pub get
-
-How to Run
-
-Navigate to the CLI package:
-
-cd library_cli
-
-Run the application:
-
-dart run
-
-Example Usage
-
-The application can be used to search for book information through the command-line interface.
-
-Example command:
-
-library > search harry potter
-
-Example output:
-
-[INFO] Searching Open Library for: harry potter
-
-Title: Harry Potter and the Philosopher's Stone
-Author: J. K. Rowling
-First Published: 1997
-
-The displayed book information is retrieved from the Open Library API.
-
-API
-
-This project uses the Open Library API to retrieve book data.
-
-The API can provide information such as:
-
-* Book title
-* Author
-* Publication year
-* ISBN
-* Publisher
-* Book cover information
-* Open Library work or edition identifiers
-
-The application processes the JSON response and converts the relevant information into Dart objects before displaying it in the command-line interface.
-
-Error Handling
-
-The application implements error handling for possible problems such as:
-
-* Network connection failures
-* API request failures
-* Invalid API responses
-* Missing or invalid book data
-* Timeout errors
-* No search results
-
-Exceptions are handled using Dart exception-handling mechanisms.
-
-Logging
-
-The CLI package includes logging functionality for recording application events and errors.
-
-Logging helps identify problems during application execution and makes troubleshooting easier.
-
-Testing
-
-The project contains automated tests for the different components of the application.
-
-Tests may include:
-
-* API client tests
-* JSON-to-model conversion tests
-* Command parsing tests
-* Error-handling tests
-* CLI behavior tests
-
-Run the tests using:
-
+```bash
 dart test
+```
 
-Conclusion
+(run from the workspace root, or inside an individual package directory)
 
-The Open Library Cataloguer demonstrates how Dart can be used to create a modular command-line application that communicates with an external API. The project combines API integration, JSON processing, object-oriented programming, command parsing, error handling, logging, terminal styling, and automated testing in a single application.
+## Dependencies
+
+- [`http`](https://pub.dev/packages/http) — HTTP requests
+- [`logging`](https://pub.dev/packages/logging) — structured logging
+- [`lints`](https://pub.dev/packages/lints) / `dart test` — linting and testing (dev only)
+
+## License
+
+_Add a license for this project (e.g. MIT) if you intend to publish it._
