@@ -1,14 +1,14 @@
-Open Library Cataloguer
+# Open Library Cataloguer
 
 A Dart-based command-line application that retrieves and displays book information using the Open Library API.
 
-Project Description
+## Project Description
 
-The Open Library Cataloguer is a command-line application developed using Dart. It connects to the Open Library API to retrieve information about books and presents the data through a simple command-line interface.
+The **Open Library Cataloguer** is a command-line application developed using Dart. It connects to the Open Library API to retrieve information about books and presents the data through a simple and interactive command-line interface.
 
 The project demonstrates API integration, JSON data processing, object-oriented programming, command-line interaction, error handling, logging, terminal styling, and automated testing.
 
-Objectives
+## Objectives
 
 The project aims to:
 
@@ -21,30 +21,31 @@ The project aims to:
 7. Organize the application using a Dart workspace with multiple packages.
 8. Implement automated tests for the project components.
 
-Features
+## Features
 
-* Search for books using the Open Library API.
-* Display book titles, authors, publication information, and other available details.
-* Support command-line interaction.
-* Handle API and network errors.
-* Use terminal colors for improved output.
-* Record application errors through logging.
-* Convert API JSON data into Dart models.
-* Include automated tests.
+- Search for books using the Open Library API.
+- Display book titles, authors, publication information, and other available details.
+- Support command-line interaction.
+- Handle API and network errors.
+- Use terminal colors for improved output.
+- Record application events and errors through logging.
+- Convert API JSON data into Dart models.
+- Include automated tests.
 
-Technologies Used
+## Technologies Used
 
-* Dart
-* Open Library API
-* HTTP
-* JSON
-* Dart Testing Framework
-* ANSI Terminal Colors
-* Git
-* GitHub
+- Dart
+- Open Library API
+- HTTP
+- JSON
+- Dart Testing Framework
+- ANSI Terminal Colors
+- Git
+- GitHub
 
-Project Structure
+## Project Structure
 
+```text
 Open_Library_Cataloguer_Workspace/
 │
 ├── terminal_colors/
@@ -115,7 +116,7 @@ Installation
 
 Clone the repository:
 
-git clone https://github.com/santiagorealyn-byte/Open_Library_Cataloguer_Workspace.git
+git clone https://github.com/lacsoncherryrose-byte/Open_Library_Cataloguer_Workspace.git
 
 Navigate to the project directory:
 
