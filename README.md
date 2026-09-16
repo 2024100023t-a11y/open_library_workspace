@@ -115,7 +115,7 @@ Installation
 
 Clone the repository:
 
-git clone https://github.com/lacsoncherryrose-byte/Open_Library_Cataloguer_Workspace.git
+git clone https://github.com/santiagorealyn-byte/Open_Library_Cataloguer_Workspace.git
 
 Navigate to the project directory:
 
